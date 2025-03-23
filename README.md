@@ -1,4 +1,4 @@
-# Upsertable
+# upsertable
 *We have Linked tables at home.*
 
 ## Why?

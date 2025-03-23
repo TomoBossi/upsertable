@@ -78,9 +78,9 @@ The `fontFamily` parameter... I mean come on, do I really need to say it?
 If `fontFamily` is not provided, `Roboto Slab` will be used. Because that's the one we use at work.
 
 ##### `fontSize`
-10 is the default value. Oh, is that too small for you? Congratulations, you just outed yourself as being 30+ years old.
+`9` is the default value. Oh, is that too small for you? Congratulations, you just outed yourself as being 30+ years old.
 
 ## Example
-Here's an example [Google Sheets sheet](https://docs.google.com/spreadsheets/d/10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc/edit?usp=sharing) and [Google Docs document](https://docs.google.com/document/d/1jm-UC0v4VvNG8Bjn3hKcb9eT5Oeg8XAglVvlH9fFe18/edit?usp=sharing) that has already been processed using this script. Before, the document consisted of this single line of text: `@10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc?sheet=1608842880%range=A:B%filters=Class Level: parseInt(x[0]) >= 3$Major: x !== "Art"`
+Here's an example [Google Sheets sheet](https://docs.google.com/spreadsheets/d/10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc?gid=1608842880) and [Google Docs document](https://docs.google.com/document/d/1jm-UC0v4VvNG8Bjn3hKcb9eT5Oeg8XAglVvlH9fFe18) that has already been processed using this script. Before, the document consisted of this single line of text: `@10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc?sheet=1608842880%range=A:B%filters=Class Level: parseInt(x[0]) >= 3$Major: x !== "Art"`
 
 You do the math!

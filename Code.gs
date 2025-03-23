@@ -7,7 +7,7 @@ const CONFIG = {
   QUERY_STRING_INTRAFILTER_SEPARATOR: ":",
   QUERY_STRING_FILTER_VARIABLE: "x",
   DEFAULT_FONT_FAMILY: "Roboto Slab", // Set to undefined to copy font family from Spreadsheet (doesn't always work properly)
-  DEFAULT_FONT_SIZE: 10 // Set to undefined to copy font size from Spreadsheet (doesn't always work properly)
+  DEFAULT_FONT_SIZE: 9 // Set to undefined to copy font size from Spreadsheet (doesn't always work properly)
 }
 
 
@@ -16,13 +16,11 @@ function getTabs(doc) {
 }
 
 
-function getNestedTabs(unnestedTabs) {
-  if (!unnestedTabs) {
-    return [];
-  }
-  let tabs = unnestedTabs;
-  for (let t of unnestedTabs) {
-    tabs = tabs.concat(getNestedTabs(t.getChildTabs()));
+function getNestedTabs(tabs) {
+  if (tabs) {
+    for (let t of tabs) {
+      tabs = tabs.concat(getNestedTabs(t.getChildTabs()));
+    }
   }
   return tabs;
 }

@@ -1,5 +1,5 @@
 const CONFIG = {
-  SPREADSHEET_LOCATOR_LEADING_CHARACTER: "\\@", // Because it will be used inside a RegExp, the leading character may need to be be escaped (\\)
+  SPREADSHEET_LOCATOR_LEADING_CHARACTER: "\\@", // Because it will be used inside a RegExp, the leading character may need to be escaped (\\)
   QUERY_STRING_LEADING_CHARACTER: "?",
   QUERY_STRING_PARAMETER_SEPARATOR: "%",
   QUERY_STRING_PARAMETER_ASSIGNMENT_OPERATOR: "=",

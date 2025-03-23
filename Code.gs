@@ -12,8 +12,7 @@ const CONFIG = {
 
 
 function getTabs(doc) {
-  const unnestedTabs = doc.getTabs();
-  return getNestedTabs(unnestedTabs);
+  return getNestedTabs(doc.getTabs());
 }
 
 

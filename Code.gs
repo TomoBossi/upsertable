@@ -37,9 +37,15 @@ function getElementBodyIndex(body, element) {
 }
 
 
+function splitOnce(str, separator) {
+  const [first, ...second] = str.split(separator);
+  return [first, second.join(separator)];
+}
+
+
 function parseSpreadsheetLocator(spreadsheetLocator) {
-  const [atSpreadsheetId, ...queryString] = spreadsheetLocator.split(CONFIG.QUERY_STRING_LEADING_CHARACTER);
-  const {sheet, range, filters, fontFamily, fontSize} = parseQueryString(queryString.join(CONFIG.QUERY_STRING_LEADING_CHARACTER));
+  const [atSpreadsheetId, queryString] = splitOnce(spreadsheetLocator, CONFIG.QUERY_STRING_LEADING_CHARACTER);
+  const {sheet, range, filters, fontFamily, fontSize} = parseQueryString(queryString);
   return {
     "id": atSpreadsheetId.slice(1), 
     "sheetId": sheet, 
@@ -53,8 +59,8 @@ function parseSpreadsheetLocator(spreadsheetLocator) {
 
 function parseQueryString(queryString) {
   if (queryString) return queryString.split(CONFIG.QUERY_STRING_PARAMETER_SEPARATOR).reduce((acc, p) => {
-    const [name, ...value] = p.split(CONFIG.QUERY_STRING_PARAMETER_ASSIGNMENT_OPERATOR);
-    acc[name] = value.join(CONFIG.QUERY_STRING_PARAMETER_ASSIGNMENT_OPERATOR);
+    const [name, value] = splitOnce(p, CONFIG.QUERY_STRING_PARAMETER_ASSIGNMENT_OPERATOR);
+    acc[name] = value;
     return acc;
   }, {});
 }
@@ -62,9 +68,9 @@ function parseQueryString(queryString) {
 
 function parseFilters(filters, columns, startCol) {
   if (filters) return filters.split(CONFIG.QUERY_STRING_INTERFILTER_SEPARATOR).reduce((acc, f) => {
-    const [column, ...filter] = f.split(CONFIG.QUERY_STRING_INTRAFILTER_SEPARATOR);
+    const [column, filter] = splitOnce(f, CONFIG.QUERY_STRING_INTRAFILTER_SEPARATOR);
     const i = /^[A-Z]+$/.test(column) ? getColumnIndex(column) : columns.indexOf(column) + startCol;
-    acc[i] = eval(`(${CONFIG.QUERY_STRING_FILTER_VARIABLE}) => ${filter.join(CONFIG.QUERY_STRING_INTRAFILTER_SEPARATOR)}`);
+    acc[i] = eval(`(${CONFIG.QUERY_STRING_FILTER_VARIABLE}) => ${filter}`);
     return acc;
   }, {});
 }

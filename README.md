@@ -11,7 +11,7 @@ Also, I don't like Google. I only use Google Docs because of work.
 ## What?
 This is an [Apps Script](https://developers.google.com/apps-script) script meant to be imported as a [library](https://developers.google.com/apps-script/guides/libraries) by the [Container-bound Script](https://developers.google.com/apps-script/guides/bound?hl=en) script of (bounded to) a Google Docs document.
 
-Using [custom syntax](#usage) (don't even click on the link, it just redirects to a later section which you are going to get to eventually, just keep reading, trust me) to reference a [Google Sheets](https://en.wikipedia.org/wiki/Google_Sheets) sheet from within a Google Docs document, this script can then be executed on the Google Docs document to automatically insert or update (upsert) all Google Sheets sheets referenced in this way throughout the entire Google Docs document (including all nested tabs). This would be awesome had Google not already implemented it themselves. But hey, this way you can also execute arbitrary unsanitized user code while you are at it.
+Using [custom syntax](#usage) (don't even click on the link, it just redirects to a later section which you are going to get to eventually, just keep reading, trust me) to reference a [Google Sheets](https://en.wikipedia.org/wiki/Google_Sheets) sheet from within a Google Docs document, this script can then be executed on the Google Docs document to automatically insert or update (upsert) all Google Sheets sheets referenced in this way throughout the entire Google Docs document (including all nested tabs). This would be awesome had Google not already implemented it. But hey, this way you can also execute arbitrary unsanitized user code while you are at it.
 
 If a reference to a Google Sheets sheet is found as a standalone paragraph in the Google Docs document, it is replaced by its corresponding up-to-date Google Spreadhseets sheet, converted into a Google Docs document table. Also, the reference itself is added at the top of the inserted table, so that future executions of the script can still find it and update the table as a result: when a reference to a Google Sheets sheet is found as part of a pre-existing table, the table is deleted and re-inserted (effectively updated) using the current up-to-date Google Spreadhseets sheet data.
 
@@ -55,16 +55,16 @@ If `sheet` is not provided, the first sheet of the Google Sheets spreadsheet wil
 
 ##### `range`
 The `range` parameter defines the range of rows and columns of the Google Sheets sheet that must make up the table in the Google Docs document (before applying [filters](#filters)).
-Its value must be a valid range written in A1 notation (e.g. `A:D` o `A2:C10`), which additionally must represent a rectangular and continuous region of the Google Sheets sheet.
+Its value must be a valid range written in [A1 notation](https://developers.google.com/workspace/sheets/api/guides/concepts#expandable-1), except the sheet name must be omitted (e.g. `A:D` o `A2:C10`). Additionally, the range must represent a rectangular and continuous region of the Google Sheets sheet.
 
 If `range` is not provided, the smallest possible range that includes all non-empty cells of the Google Sheets sheet will be used.
 
 ##### `filters`
-The `filters` parameter is by far the most fun of all parameters, as it's the only one that allows for the execution of arbitrary unsanitized user code. Its value consists of a series of column:filter pairs. Only rows that pass all filters (and are part of the defined [range](#range)) will be shown in the Google Docs document, except for the first row (which is assumed to contain column names and is always shown).
+The `filters` parameter is by far the most fun of all parameters, as it's the only one that allows the execution of arbitrary unsanitized user code. Its value consists of a series of column:filter pairs. Only rows that pass all filters (and are part of the defined [range](#range)) will be shown in the Google Docs document, except for the first row (which is assumed to contain column names and is always shown).
 
 The column:filter pairs must be separated by `$` (the devoted domentation reader may suggest something like `|` would be a better separator and would be correct, the reason for this subversion of strawmanned explicit expectations will soon be revealed to the most devoted of documentation readers). There can be at most one filter per column.
 
-In each column:filter pair, column and filter must be separated by `:`. The column can be provided by using either A1 notation formatted in uppercase (e.g. `A`, `D`, `BC`), or the exact column name of the column of the Google Sheets sheet over which the filter should be applied (in this case, it is assumed that all column names are unique and can be found in the first row of the Google Sheets sheet).
+In each column:filter pair, column and filter must be separated by `:`. The column can be specified using either its label (e.g. `A`, `D`, `BC`) or name (in the latter case, it is assumed that all column names are unique and can be found in the first row of the Google Sheets sheet).
 
 Each filter must be a valid single-line JavaScript expression that is a unary function of `x` and evaluates to `true` or `false` (or any other value that can be automatically coerced into a boolean). In these expressions, the `x` variable represents the table cell value being tested.
 

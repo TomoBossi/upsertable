@@ -1,3 +1,5 @@
+// https://github.com/TomoBossi/Upsertable?tab=readme-ov-file#upsertable
+
 const CONFIG = {
   SPREADSHEET_LOCATOR_LEADING_CHARACTER: "\\@", // Because it will be used inside a RegExp, the leading character may need to be escaped (\\)
   QUERY_STRING_LEADING_CHARACTER: "?",

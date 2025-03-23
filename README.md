@@ -64,7 +64,7 @@ The `filters` parameter is by far the most fun of all parameters, as it's the on
 
 The column:filter pairs must be separated by `$` (the devoted domentation reader may suggest something like `|` would be a better separator and would be correct, the reason for this subversion of strawmanned explicit expectations will soon be revealed to the most devoted of documentation readers). There can be at most one filter per column.
 
-In each column:filter pair, column and filter must be separated by `:`. The column can be specified using either its label (e.g. `A`, `D`, `BC`) or name (in the latter case, it is assumed that all column names are unique and can be found in the first row of the Google Sheets sheet).
+In each column:filter pair, column and filter must be separated by `:`. The column can be specified using either its label (e.g. `A`, `D`, `BC`) or name. In the latter case, it is assumed that all column names are unique and can be found in the first row of the Google Sheets sheet.
 
 Each filter must be a valid single-line JavaScript expression that is a unary function of `x` and evaluates to `true` or `false` (or any other value that can be automatically coerced into a boolean). In these expressions, the `x` variable represents the table cell value being tested.
 
@@ -81,6 +81,6 @@ If `fontFamily` is not provided, `Roboto Slab` will be used. Because that's the 
 `9` is the default value. Oh, is that too small for you? Congratulations, you just outed yourself as being 30+ years old.
 
 ## Example
-Here's an example [Google Sheets sheet](https://docs.google.com/spreadsheets/d/10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc?gid=1608842880) and [Google Docs document](https://docs.google.com/document/d/1jm-UC0v4VvNG8Bjn3hKcb9eT5Oeg8XAglVvlH9fFe18) that has already been processed using this script. Before, the document consisted of this single line of text: `@10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc?sheet=1608842880%range=A:B%filters=Class Level: parseInt(x[0]) >= 3$Major: x !== "Art"`
+Here's an example [Google Sheets sheet](https://docs.google.com/spreadsheets/d/10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc?gid=1608842880) and [Google Docs document](https://docs.google.com/document/d/1jm-UC0v4VvNG8Bjn3hKcb9eT5Oeg8XAglVvlH9fFe18) that has already been processed using this script. Before, the document consisted of this single line of text: `@10kkei0NCiVISweVuV2N6i1iL2CIMXbGaBHSRMkbrdhc?sheet=1608842880%range=B:E%filters=Class Level: parseInt(x[0]) >= 3 $Major: x !== "Art"`
 
 You do the math!

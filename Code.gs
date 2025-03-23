@@ -1,5 +1,3 @@
-// https://github.com/TomoBossi/Upsertable?tab=readme-ov-file#upsertable
-
 const CONFIG = {
   SPREADSHEET_LOCATOR_LEADING_CHARACTER: "\\@", // Because it will be used inside a RegExp, the leading character may need to be escaped (\\)
   QUERY_STRING_LEADING_CHARACTER: "?",
@@ -62,18 +60,37 @@ function parseQueryString(queryString) {
 }
 
 
-function parseFilters(filters, columns) {
+function parseFilters(filters, columns, startCol) {
   if (filters) return filters.split(CONFIG.QUERY_STRING_INTERFILTER_SEPARATOR).reduce((acc, f) => {
     const [column, ...filter] = f.split(CONFIG.QUERY_STRING_INTRAFILTER_SEPARATOR);
-    const i = /^[A-Z]+$/.test(column) ? getColumnIndex(column) : columns.indexOf(column);
+    const i = /^[A-Z]+$/.test(column) ? getColumnIndex(column) : columns.indexOf(column) + startCol;
     acc[i] = eval(`(${CONFIG.QUERY_STRING_FILTER_VARIABLE}) => ${filter.join(CONFIG.QUERY_STRING_INTRAFILTER_SEPARATOR)}`);
     return acc;
   }, {});
 }
 
 
-function getColumns(sheet) {
-  return sheet.getDataRange().getDisplayValues()[0];
+function getColumns(sheet, startRow, startCol) {
+  const columns = getNonEmptySubarray(sheet.getDataRange().getDisplayValues()[startRow], startCol);
+  return {
+    "columns": columns.array,
+    "startCol": columns.startIndex
+  };
+}
+
+
+function getNonEmptySubarray(arr, startIndex) {
+  let endIndex = startIndex;
+  while (startIndex > 0 && arr[startIndex - 1] !== "") {
+    startIndex--;
+  }
+  while (endIndex < arr.length && arr[endIndex] !== "") {
+    endIndex++;
+  }
+  return {
+    "array": arr.slice(startIndex, endIndex),
+    "startIndex": startIndex
+  };
 }
 
 
@@ -98,23 +115,44 @@ function getExcludedRows(sheet, spreadsheetData, filterMap) {
 }
 
 
+function getSmallestDataRange(sheet) {
+  const defaultDataRangeValues = sheet.getDataRange().getDisplayValues();
+  let startRow = 0;
+  const numRows = defaultDataRangeValues.length;
+  while (startRow < numRows && defaultDataRangeValues[startRow].every(item => item === "")) {
+    startRow++;
+  }
+  let startCol = 0;
+  const numCols = defaultDataRangeValues[0].length;
+  while (startCol < numCols && defaultDataRangeValues.every(row => row[startCol] === "")) {
+    startCol++;
+  }
+  return sheet.getRange(startRow + 1, startCol + 1, numRows - startRow, numCols - startCol);
+}
+
+
+function getIntersectionRange(sheet, r1, r2) {
+  const startRow = Math.max(r1.getRow(), r2.getRow());
+  const startCol = Math.max(r1.getColumn(), r2.getColumn());
+  const lastRow = Math.min(r1.getLastRow(), r2.getLastRow());
+  const lastCol = Math.min(r1.getLastColumn(), r2.getLastColumn());
+  return sheet.getRange(startRow, startCol, lastRow - startRow + 1, lastCol - startCol + 1);
+}
+
+
 function getSpreadsheetData(spreadsheetLocator) {
   const {id, sheetId, range, filters, fontFamily, fontSize} = parseSpreadsheetLocator(spreadsheetLocator);
   const spreadsheet = SpreadsheetApp.openById(id);
   const sheet = sheetId !== undefined ? spreadsheet.getSheetById(sheetId) : spreadsheet.getSheets()[0];
-  let spreadsheetData = sheet.getDataRange();
+  let spreadsheetData = getSmallestDataRange(sheet);
   if (range) {
-    const selection = sheet.getRange(range);
-    const rangeFirstRow = Math.max(spreadsheetData.getRow(), selection.getRow());
-    const rangeFirstCol = Math.max(spreadsheetData.getColumn(), selection.getColumn());
-    const rangeLastRow = Math.min(spreadsheetData.getLastRow(), selection.getLastRow());
-    const rangeLastCol = Math.min(spreadsheetData.getLastColumn(), selection.getLastColumn());
-    spreadsheetData = sheet.getRange(rangeFirstRow, rangeFirstCol, rangeLastRow - rangeFirstRow + 1, rangeLastCol - rangeFirstCol + 1);
+    spreadsheetData = getIntersectionRange(sheet, spreadsheetData, sheet.getRange(range));
   }
+  const {columns, startCol} = getColumns(sheet, spreadsheetData.getRow() - 1, spreadsheetData.getColumn() - 1);
   return {
     "spreadsheetData": spreadsheetData, 
     "spreadsheetUrl": `${spreadsheet.getUrl()}?gid=${sheet.getSheetId()}`,
-    "excludedRows": getExcludedRows(sheet, spreadsheetData, parseFilters(filters, getColumns(sheet))),
+    "excludedRows": getExcludedRows(sheet, spreadsheetData, parseFilters(filters, columns, startCol)),
     "fontFamily": fontFamily,
     "fontSize": fontSize
   };

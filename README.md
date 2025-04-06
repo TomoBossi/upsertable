@@ -55,7 +55,7 @@ If `sheet` is not provided, the first sheet of the Google Sheets spreadsheet wil
 
 ##### `range`
 The `range` parameter defines the range of rows and columns of the Google Sheets sheet that must make up the table in the Google Docs document (before applying [filters](#filters)).
-Its value must be a valid range written in [A1 notation](https://developers.google.com/workspace/sheets/api/guides/concepts#expandable-1), except the sheet name must be omitted (e.g. `A:D` o `A2:C10`). Additionally, the range must represent a rectangular and continuous region of the Google Sheets sheet.
+Its value must be a valid range written in [A1 notation](https://developers.google.com/workspace/sheets/api/guides/concepts#expandable-1), except the sheet name must be omitted (e.g. `A:D` or `A2:C10`). Additionally, the range must represent a rectangular and continuous region of the Google Sheets sheet.
 
 If `range` is not provided, the smallest possible range that includes all non-empty cells of the Google Sheets sheet will be used.
 
